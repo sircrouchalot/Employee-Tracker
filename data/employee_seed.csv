@@ -1,4 +1,5 @@
-1, Alex, Crouch, Engineer, Engineering, 120000, Ashley Chambers
-2, Ashley, Chambers, Engineer, Engineering, 150000, null
-3, Gregory, Block, Sales Lead, Sales, 100000, null
-4, Hannah, Shirley, Salesperson, Sales, 60000, Gregory Block
+id,first_name,last_name,role_id,manager_id
+1,Alex,Crouch,1,4
+2,Gregory,Block,3,3
+3,Hannah,Shirley,4,NULL
+4,Ashley,Chambers,2,NULL
