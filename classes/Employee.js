@@ -1,9 +1,8 @@
 class Employee {
-    constructor(firstName, lastName, role, salary, manager) {
+    constructor(firstName, lastName, role, manager) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
-        this.salary = salary;
         this.manager = manager;
         this.role = this.role;
     }
