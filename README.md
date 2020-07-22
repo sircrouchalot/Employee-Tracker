@@ -10,7 +10,7 @@ Inquirer CLI application that prompts the user with various functions such as:
 5. Remove an Employee
 6. Update Employee Role
 ```
-The application then connects to a SQL schema and updates runs requests to the database for those various commands.
+The application then connects to a SQL schema and runs requests to the database for those various commands.
 
 ## Installation
 
