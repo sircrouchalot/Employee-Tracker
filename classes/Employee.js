@@ -5,7 +5,7 @@ class Employee {
         this.role = role;
         this.salary = salary;
         this.manager = manager;
-        this.role = "";
+        this.role = this.role;
     }
 
     getName() {
