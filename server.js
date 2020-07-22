@@ -22,31 +22,32 @@ var roles = [
   "Accountant",
 ];
 
-var managers = [];
+var employeeNames = [];
+var employees = [];
 
 var newEmployeePrompts = [
   {
     type: "input",
     message: "What is their first name?",
-    name: "firstName"
+    name: "firstName",
   },
   {
     type: "input",
     message: "What is their last name?",
-    name: "lastName"
+    name: "lastName",
   },
   {
     type: "list",
     message: "What is their role?",
     choices: roles,
-    name: "title"
+    name: "title",
   },
   {
     type: "input",
     message: "Enter their manager's id:",
-    name: "manager"
-  }
-]
+    name: "manager",
+  },
+];
 
 var prompts = [
   {
@@ -104,9 +105,10 @@ function start() {
         viewRoles(response.role);
         break;
       case "Add Employee":
-        addEmployee(response);
+        addEmployee();
         break;
       case "Remove Employee":
+        removeEmployee();
         break;
       case "Update Employee Role":
         break;
@@ -165,24 +167,66 @@ function start() {
   }
 
   function addEmployee() {
-    inquirer
-    .prompt(newEmployeePrompts)
-    .then(function(response) {
-      let newEmployee = new Employee(response.firstName, response.lastName, response.title, response.manager);
-      let role_id = roles.findIndex((element) => element === response.title) + 1;
-      if (response.manager === '') {
+    inquirer.prompt(newEmployeePrompts).then(function (response) {
+      let newEmployee = new Employee(
+        response.firstName,
+        response.lastName,
+        response.title,
+        response.manager
+      );
+      console.log(employees);
+      let role_id =
+        roles.findIndex((element) => element === response.title) + 1;
+      if (response.manager === "") {
         response.manager = null;
       }
       connection.query(
         `INSERT INTO employees(first_name, last_name, role_id, manager_id)
         VALUES (?, ?, ?, ?);`,
-        [response.firstName, response.lastName, role_id, response.manager],
+        [
+          newEmployee.firstName,
+          newEmployee.lastName,
+          role_id,
+          newEmployee.manager,
+        ],
         (err, res) => {
           if (err) throw err;
-          console.table("Adding employee...SUCCESSFUL!")
+          console.log("Adding employee...SUCCESSFUL!");
           start();
         }
       );
     });
   }
+
+  function removeEmployee() {
+    connection.query(
+      `SELECT CONCAT(first_name, " ", last_name) AS full_name
+      FROM employees;`,
+      function (err, res) {
+        if (err) throw err;
+        res.forEach(a => employeeNames.push(a.full_name));
+        
+        inquirer
+          .prompt({
+            type: "list",
+            message: "Which employee?",
+            choices: employeeNames,
+            name: "employee",
+          })
+          .then(function (response) {
+            console.log(response.employee);
+            let newArr = response.employee.split(" ");
+            connection.query(
+              `DELETE FROM employees WHERE first_name = ? AND last_name = ?`,
+              [newArr[0], newArr[1]],
+              (err, res) => {
+                if (err) throw err;
+                console.log("Removal of employee...SUCCESSFUL!");
+                start();
+              }
+            );
+          });
+    
+    }
+  )};
 }
